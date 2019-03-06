@@ -78,5 +78,5 @@ void BRAVO_rwlock_write_unlock(BRAVO_rwlock_t *l, pfq_rwlock_node_t* node) {
 }
 
 void BRAVO_rwlock_destroy(BRAVO_rwlock_t *l) {
-    pthread_rwlock_destroy(l->Underlying);
+   // pthread_rwlock_destroy(l->Underlying);
 }
