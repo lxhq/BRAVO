@@ -4,11 +4,11 @@
 #include "BRAVOLock.h"
 #include "pfq-rwlock.h"
 
-const bool BRAVO = false;           //TRUE: BRAVO will be used. FALSE: pfp will be used
+const bool BRAVO = true;          //TRUE: BRAVO will be used. FALSE: pfp will be used
 pfq_rwlock_t pfq_rwlock;           //declare our pfq rw lock
 BRAVO_rwlock_t BRAVO_rwlock;       //declare our BRAVO rw lock
 int data = 0;                      //the shared variable
-const int READER_TIMES = 6000000;  //each reader thread will read data READER_TIMES times
+const int READER_TIMES = 8000000;  //each reader thread will read data READER_TIMES times
 const int WRITER_TIMES = 5000000;  //each writer thread will add 1 to data WRITER_TIMES times
 const int READSIZE = 100;          //we have READSIZE reader threads
 const int WRITESIZE = 3;           //we have WRITESIZE writer threads
@@ -25,7 +25,7 @@ void* reader(void* arg)
         } else {
             pfq_rwlock_read_lock(&pfq_rwlock);
             int a = data;
-            printf("%lu read : %d , %d times \n",pthread_self(), data, i); //read the shared value
+            //printf("%lu read : %d , %d times \n",pthread_self(), data, i); //read the shared value
             pfq_rwlock_read_unlock(&pfq_rwlock);
         }
     }
@@ -46,7 +46,7 @@ void* writer(void* arg)
             pfq_rwlock_node_t node;
             pfq_rwlock_write_lock(&pfq_rwlock, &node);
             data++;                              //write to the shared value
-            printf("    %lu write : %d\n",pthread_self(), data);
+            //printf("    %lu write : %d\n",pthread_self(), data);
             pfq_rwlock_write_unlock(&pfq_rwlock, &node);
         }
     }
