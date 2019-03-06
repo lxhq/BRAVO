@@ -69,7 +69,7 @@
 // local includes
 //******************************************************************************
 
-#include "hpctoolkit-config.h"
+//#include "hpctoolkit-config.h"
 #include "pfq-rwlock.h"
 
 //******************************************************************************
@@ -96,6 +96,8 @@
 #ifdef HOST_LITTLE_ENDIAN
 #define LSB_PTR(p) ((unsigned char *) p)
 #endif
+
+#define LSB_PTR(p) ((unsigned char *) p)
 
 #ifndef LSB_PTR
 #error "endianness must be configured. " \

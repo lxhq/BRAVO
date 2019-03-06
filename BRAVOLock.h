@@ -1,25 +1,19 @@
-template<typename T> 
-class BRAVOLock {
-public:
-	T Underlying;
-	time_t InhibitUntil;
+#include "pfq-rwlock.h"
+
+typedef struct  {
+	pfq_rwlock_t* Underlying;
+	long InhibitUntil;
 	int RBias;
-};
+} BRAVO_rwlock_t;
 
-class Lock {
-public:
-	void requireRead() {};
-	void releaseRead() {};
-	void requireWrite() {};
-	void releaseWrite() {};
-};
+void BRAVO_rwlock_init(BRAVO_rwlock_t *l, pfq_rwlock_t* pl);
 
-char* Hash(BRAVOLock<Lock>* L, int);
+int BRAVO_rwlock_read_lock(BRAVO_rwlock_t *l);
 
-template<typename T>
-void Reader(BRAVOLock<T>*);
+void BRAVO_rwlock_read_unlock(BRAVO_rwlock_t *l, int pos);
 
-template<typename T>
-void Writer(BRAVOLock<T>*);
+void BRAVO_rwlock_write_lock(BRAVO_rwlock_t *l, pfq_rwlock_node_t* node);
 
+void BRAVO_rwlock_write_unlock(BRAVO_rwlock_t *l, pfq_rwlock_node_t* node);
 
+void BRAVO_rwlock_destroy(BRAVO_rwlock_t *l);
