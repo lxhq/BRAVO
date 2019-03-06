@@ -4,10 +4,12 @@
 #include "BRAVOLock.h"
 #include "pfq-rwlock.h"
 
-BRAVO_rwlock_t rwlock;               //declare our rw lock
-int data = 0;                        //the shared variable
-const int READER_TIMES = 8000000;
-const int WRITER_TIMES = 5000000;
+BRAVO_rwlock_t rwlock;             //declare our rw lock
+int data = 0;                      //the shared variable
+const int READER_TIMES = 8000000;  //each reader thread will read data this times
+const int WRITER_TIMES = 5000000;  //each writer thread will add 1 to data WRITER_TIMES times
+const int READSIZE = 100;          //how many reader threads we have
+const int WRITESIZE = 3;           //how many writer threads we have
 
 void* reader(void* arg)
 {
@@ -19,7 +21,7 @@ void* reader(void* arg)
         
         int a = data;
         a++;
-        printf("%lu read : %d , %d times \n",pthread_self(), data, i); //read the shared value
+        //printf("%lu read : %d , %d times \n",pthread_self(), data, i); //read the shared value
         
         //pthread_rwlock_unlock(&rwlock);    //read unlock
         BRAVO_rwlock_read_unlock(&rwlock, pos);
@@ -36,7 +38,7 @@ void* writer(void* arg)
         BRAVO_rwlock_write_lock(&rwlock, &node);
         //pthread_rwlock_wrlock(&rwlock);      //write lock
         data++;                              //write to the shared value
-        printf("    %lu write : %d\n",pthread_self(), data);
+        //printf("    %lu write : %d\n",pthread_self(), data);
         //pthread_rwlock_unlock(&rwlock);      //write unlock
         BRAVO_rwlock_write_unlock(&rwlock, &node);
     }
@@ -48,8 +50,6 @@ int main(int argc,char** argv)
 {
     pfq_rwlock_t pl;    //create the underlying lock
     BRAVO_rwlock_init(&rwlock, &pl);  //create our BRAVO lock
-    const int READSIZE = 15;    //how many reader threads we have
-    const int WRITESIZE = 3;   //how many writer threads we have
     pthread_t read[READSIZE];   //create our reader threads
     pthread_t write[WRITESIZE]; //create our writer threads
     
