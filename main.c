@@ -9,7 +9,7 @@ pfq_rwlock_t pfq_rwlock;           //declare our pfq rw lock
 BRAVO_rwlock_t BRAVO_rwlock;       //declare our BRAVO rw lock
 int data = 0;                      //the shared variable
 const int READER_TIMES = 8000000;  //each reader thread will read data READER_TIMES times
-const int WRITER_TIMES = 5000000;  //each writer thread will add 1 to data WRITER_TIMES times
+const int WRITER_TIMES = 500000;  //each writer thread will add 1 to data WRITER_TIMES times
 
 void* reader(void* arg)
 {
@@ -81,11 +81,11 @@ int main(int argc,char** argv)
     pthread_t write[WRITESIZE];                     //create our writer threads
     
     printf("we have total %d reader threads and %d writer threads\n", READSIZE, WRITESIZE);
-    printf("Each reader threads will read %d times\n", READER_TIMES);
-    printf("Each writer threads will write %d times\n", WRITER_TIMES);
+    //printf("Each reader threads will read %d times\n", READER_TIMES);
+    //printf("Each writer threads will write %d times\n", WRITER_TIMES);
     
-    struct timespec tstart, tend;
-    clock_gettime(CLOCK_MONOTONIC,&tstart);
+    //struct timespec tstart, tend;
+    //clock_gettime(CLOCK_MONOTONIC,&tstart);
     
     int i = 0;
     for (i = 0; i < READSIZE; i++) {
@@ -101,11 +101,11 @@ int main(int argc,char** argv)
         pthread_join(write[i], NULL);               //wait for writer threads
     }
     
-    clock_gettime(CLOCK_MONOTONIC,&tend);
-    long time_cost_sec = 1000 * (tstart.tv_sec - tend.tv_sec);
-    long time_cost_nsec = (tstart.tv_nsec - tend.tv_nsec) / 1000000;
+    //clock_gettime(CLOCK_MONOTONIC,&tend);
+    //long time_cost_sec = (tstart.tv_sec - tend.tv_sec);
+    //long time_cost_nsec = (tstart.tv_nsec - tend.tv_nsec) / 1000000;
     //printf("%lu, %lu",time_cost_sec, time_cost_nsec);
-    printf("End of Program with %lums, data: %d\n\n", time_cost_sec + time_cost_nsec, data);
+    printf("End of Program with data: %d\n\n", data);
 
     return 0;
 }
