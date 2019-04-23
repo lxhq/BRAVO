@@ -84,9 +84,8 @@ int main(int argc,char** argv)
     printf("Each reader threads will read %d times\n", READER_TIMES);
     printf("Each writer threads will write %d times\n", WRITER_TIMES);
     
-    struct timespec ts;
-    clock_gettime(CLOCK_MONOTONIC,&ts);
-    long start = ts.tv_sec;
+    struct timespec tstart, tend;
+    clock_gettime(CLOCK_MONOTONIC,&tstart);
     
     int i = 0;
     for (i = 0; i < READSIZE; i++) {
@@ -102,9 +101,11 @@ int main(int argc,char** argv)
         pthread_join(write[i], NULL);               //wait for writer threads
     }
     
-    clock_gettime(CLOCK_MONOTONIC,&ts);
-    long time_cost = ts.tv_sec - start;
-    
-    printf("End of Program with %lus, data: %d\n", time_cost, data);
+    clock_gettime(CLOCK_MONOTONIC,&tend);
+    long time_cost_sec = 1000 * (tstart.tv_sec - tend.tv_sec);
+    long time_cost_nsec = (tstart.tv_nsec - tend.tv_nsec) / 1000000;
+    //printf("%lu, %lu",time_cost_sec, time_cost_nsec);
+    printf("End of Program with %lums, data: %d\n\n", time_cost_sec + time_cost_nsec, data);
+
     return 0;
 }

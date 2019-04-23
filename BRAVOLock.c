@@ -5,14 +5,14 @@
 #include <time.h>
 #include "BRAVOLock.h"
 
-const int SIZE = 1024;
-BRAVO_rwlock_t *VisibleReaders[1024];
+const int SIZE = 1021;
+BRAVO_rwlock_t *VisibleReaders[1021];
 const int N = 9;
 
 int calhash(BRAVO_rwlock_t *l) {
     unsigned int a = (unsigned int)pthread_self();
-    unsigned int c = a + (unsigned int)l;
-    c = (c >> 20) ^ (c >> 12) ^ (c >> 7) ^ (c >> 4);
+    unsigned int b = a + (unsigned int)l;
+    unsigned int c = (a << 16) + (b >> 16);
     return c % SIZE;
 }
 
