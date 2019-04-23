@@ -4,14 +4,13 @@
 #include "BRAVOLock.h"
 #include "pfq-rwlock.h"
 
-const bool BRAVO = true;          //TRUE: BRAVO will be used. FALSE: pfp will be used
+bool BRAVO = true;          //TRUE: BRAVO will be used. FALSE: pfp will be used
 pfq_rwlock_t pfq_rwlock;           //declare our pfq rw lock
 BRAVO_rwlock_t BRAVO_rwlock;       //declare our BRAVO rw lock
 int data = 0;                      //the shared variable
 const int READER_TIMES = 8000000;  //each reader thread will read data READER_TIMES times
 const int WRITER_TIMES = 5000000;  //each writer thread will add 1 to data WRITER_TIMES times
-const int READSIZE = 100;          //we have READSIZE reader threads
-const int WRITESIZE = 3;           //we have WRITESIZE writer threads
+
 void* reader(void* arg)
 {
     int i = 0;
@@ -55,6 +54,20 @@ void* writer(void* arg)
 
 int main(int argc,char** argv)
 {
+
+    if (argc != 4) {
+        printf("Must have Four input arguments, only have %d now\n", argc);
+        exit(0);
+    }
+    if (strcmp(argv[1], "BRAVO") == 0) {
+        BRAVO = true;
+    } else {
+        BRAVO = false;
+    }
+    
+    int READSIZE = atoi(argv[2]);   //we have READSIZE reader threads
+    int WRITESIZE = atoi(argv[3]);  //we have WRITESIZE writer thread
+
     if (BRAVO) {
         printf("This is the test for BRAVO rwlock\n");
     } else {
